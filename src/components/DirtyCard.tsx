@@ -45,7 +45,7 @@ const DirtyCard: React.FC<DirtyCardProps> = ({ onHeaderClick }) => {
         <CardTitle className="text-2xl">
           Not so cute password generator
         </CardTitle>
-        <CardDescription className="text-slate-500 text-lg">
+        <CardDescription className="text-white text-lg">
           A not so cute password generator for no one (or Espen)
         </CardDescription>
       </CardHeader>

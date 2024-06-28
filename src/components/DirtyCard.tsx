@@ -14,6 +14,7 @@ import { CopyIcon } from "@radix-ui/react-icons";
 import { Toaster } from "./ui/sonner";
 import { toast } from "sonner";
 import { Slider } from "./ui/slider";
+import { Checkbox } from "./ui/checkbox";
 
 // Ensure onHeaderClick is typed correctly if TypeScript is used
 interface DirtyCardProps {
@@ -23,15 +24,17 @@ interface DirtyCardProps {
 const DirtyCard: React.FC<DirtyCardProps> = ({ onHeaderClick }) => {
   const [inputPassword, setInputPassword] = useState<string>("");
   const [sliderValue, setSliderValue] = useState<number>(18);
+  const [friendly, setFriendly] = useState<boolean>(false);
+  const [upperLower, setUpperLower] = useState<boolean>(false);
 
   useEffect(() => {
-    generatePassword(sliderValue, false).then((password) =>
-      setInputPassword(password)
+    generatePassword(sliderValue, false, friendly, upperLower).then(
+      (password) => setInputPassword(password)
     );
-  }, []);
+  }, [sliderValue, friendly, upperLower]);
 
   async function handleClick() {
-    const password = await generatePassword(sliderValue, false);
+    const password = await generatePassword(sliderValue, false, friendly);
     setInputPassword(password);
     console.log(password);
   }
@@ -69,7 +72,7 @@ const DirtyCard: React.FC<DirtyCardProps> = ({ onHeaderClick }) => {
         </div>
         <div className="w-4/5 flex gap-2">
           <Slider
-            defaultValue={[15]}
+            defaultValue={[sliderValue]}
             max={30}
             min={12}
             step={1}
@@ -77,7 +80,46 @@ const DirtyCard: React.FC<DirtyCardProps> = ({ onHeaderClick }) => {
           />
           <div>{sliderValue}</div>
         </div>
-
+        <div className="items-top flex space-x-2">
+          <Checkbox
+            className="data-[state=checked]:bg-[#F1931C] border-[#F1931C]"
+            id="friendlyPassword"
+            onCheckedChange={(isChecked) => {
+              // Check if isChecked is a boolean before calling setFriendly
+              if (isChecked === true || isChecked === false) {
+                setFriendly(isChecked);
+              }
+            }}
+          />
+          <div className="grid gap-1.5 leading-none">
+            <label
+              htmlFor="friendlyPassword"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Friendly (no special characters)
+            </label>
+          </div>
+        </div>
+        <div className="items-top flex space-x-2">
+          <Checkbox
+            className="data-[state=checked]:bg-[#F1931C] border-[#F1931C]"
+            id="upperLower"
+            onCheckedChange={(isChecked) => {
+              // Check if isChecked is a boolean before calling setFriendly
+              if (isChecked === true || isChecked === false) {
+                setUpperLower(isChecked);
+              }
+            }}
+          />
+          <div className="grid gap-1.5 leading-none">
+            <label
+              htmlFor="upperLower"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Random UpperLower
+            </label>
+          </div>
+        </div>
         <Button
           className="bg-[#F1931C] hover:bg-red-500 text-lg"
           onClick={handleClick}
